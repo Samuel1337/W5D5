@@ -29,7 +29,22 @@ def costars(name)
   # List the names of the actors that the named actor has ever
   # appeared with.
   # Hint: use a subquery
-
+Actor
+  .select(:name)
+  .joins(:castings)
+  .group(:name)
+  .having(name: name)
+  .where(
+  "castings.movie_id IN (
+  SELECT
+    castings.movie_id
+  FROM
+    actors
+  JOIN
+    castings
+  ON
+    castings.actor_id = actors.id
+  )")
 end
 
 def actor_out_of_work
